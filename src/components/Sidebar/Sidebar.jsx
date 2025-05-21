@@ -1,26 +1,79 @@
+// import React from 'react';
+// import { Link, useLocation } from 'react-router-dom';
+// import './Sidebar.css';
+
+// const Sidebar = () => {
+//   const location = useLocation();
+
+//   return (
+//     <div className="sidebar">
+//       <h1 className="sidebar-title">Money Matters</h1>
+//       <nav className="sidebar-nav">
+//         <ul>
+//           <li className={location.pathname === '/' ? 'active' : ''}>
+//             <Link to="/">Dashboard</Link>
+//           </li>
+//           <li className={location.pathname === '/transactions' ? 'active' : ''}>
+//             <Link to="/transactions">Transactions</Link>
+//           </li>
+//           <li className={location.pathname === '/profile' ? 'active' : ''}>
+//             <Link to="/profile">Profile</Link>
+//           </li>
+//         </ul>
+//       </nav>
+//     </div>
+//   );
+// };
+
+// export default Sidebar;
+
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { logout } from '../../services/auth';
 import './Sidebar.css';
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div className="sidebar">
-      <h1 className="sidebar-title">Money Matters</h1>
+      <div className="sidebar-header">
+        <h1 className="sidebar-title">Money Matters</h1>
+      </div>
       <nav className="sidebar-nav">
         <ul>
           <li className={location.pathname === '/' ? 'active' : ''}>
-            <Link to="/">Dashboard</Link>
+            <Link to="/">
+              <i className="icon dashboard-icon"></i>
+              Dashboard
+            </Link>
           </li>
           <li className={location.pathname === '/transactions' ? 'active' : ''}>
-            <Link to="/transactions">Transactions</Link>
+            <Link to="/transactions">
+              <i className="icon transactions-icon"></i>
+              Transactions
+            </Link>
           </li>
           <li className={location.pathname === '/profile' ? 'active' : ''}>
-            <Link to="/profile">Profile</Link>
+            <Link to="/profile">
+              <i className="icon profile-icon"></i>
+              Profile
+            </Link>
           </li>
         </ul>
       </nav>
+      <div className="sidebar-footer">
+        <button onClick={handleLogout} className="logout-button">
+          <i className="icon logout-icon"></i>
+          Logout
+        </button>
+      </div>
     </div>
   );
 };

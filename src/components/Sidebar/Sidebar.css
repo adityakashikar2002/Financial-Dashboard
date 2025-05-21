@@ -1,4 +1,4 @@
-.sidebar {
+/* .sidebar {
   width: 250px;
   height: 100vh;
   position: fixed;
@@ -39,4 +39,129 @@
 .sidebar-nav .active a {
   color: #3498db;
   font-weight: 500;
+} */
+
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+
+.sidebar-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--gray-light);
+}
+
+.sidebar-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin: 0;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 1.5rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li {
+  margin: 0;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  color: var(--gray);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  color: var(--primary);
+}
+
+.sidebar-nav .active a {
+  background-color: #eef2ff;
+  color: var(--primary);
+  border-right: 3px solid var(--primary);
+}
+
+.sidebar-nav .icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.75rem;
+  background-color: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+.sidebar-nav .dashboard-icon {
+  mask-image: url('../../assets/icons/dashboard.svg');
+}
+
+.sidebar-nav .transactions-icon {
+  mask-image: url('../../assets/icons/transactions.svg');
+}
+
+.sidebar-nav .profile-icon {
+  mask-image: url('../../assets/icons/profile.svg');
+}
+
+.sidebar-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--gray-light);
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--danger);
+  font-weight: 500;
+}
+
+.logout-button:hover {
+  color: #dc2626;
+}
+
+.logout-button .icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.75rem;
+  background-color: currentColor;
+  mask-image: url('../../assets/icons/logout.svg');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
 }

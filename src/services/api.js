@@ -73,7 +73,7 @@ const authRequest = async (method, url, data = null) => {
 };
 
 // Fetch all transactions with pagination
-export const getAllTransactions = async (limit = 10, offset = 0) => {
+export const getAllTransactions = async (limit = 10000, offset = 0) => {
   // Now, authRequest will correctly put limit and offset into URL query params
   const data = await authRequest('get', '/all-transactions', { limit, offset });
   return data.transactions;
