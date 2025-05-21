@@ -1,26 +1,3 @@
-// export const login = async (email, password) => {
-//   try {
-//     // For this demo, we'll use a simple mapping
-//     const userMap = {
-//       'jane.doe@gmail.com': { id: 1, password: 'janedoe@123' },
-//       'teja@gmail.com': { id: 5, password: 'teja@123' }
-//     };
-
-//     const user = userMap[email];
-    
-//     if (user && user.password === password) {
-//       localStorage.setItem('userId', user.id.toString());
-//       localStorage.setItem('userEmail', email);
-//       return { userId: user.id, email };
-//     }
-    
-//     throw new Error('Invalid email or password');
-//   } catch (error) {
-//     console.error('Login failed:', error);
-//     throw error;
-//   }
-// };
-
 const API_BASE_URL = 'https://bursting-gelding-24.hasura.app/api/rest';
 
 export const login = async (email, password) => {
