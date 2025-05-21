@@ -1,25 +1,83 @@
-import logo from './logo.svg';
+// src/App.jsx
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AppProvider } from './context/AppContext';
+import { isAuthenticated } from './services/auth';
+import Sidebar from './components/Sidebar/Sidebar';
+import Dashboard from './pages/Dashboard/Dashboard';
+import Transactions from './pages/Transactions/Transactions';
+import ProfilePage from './pages/Profile/ProfilePage';
+import AddEditTransaction from './pages/AddEditTransaction/AddEditTransaction';
+import Login from './pages/Login/Login';
 import './App.css';
 
-function App() {
+const PrivateRoute = ({ children }) => {
+  return isAuthenticated() ? children : <Navigate to="/login" />;
+};
+
+const App = () => {
+  useEffect(() => {
+    // Clear any existing auth data if the user is not authenticated
+    if (!isAuthenticated()) {
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userEmail');
+    }
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <AppProvider>
+        <div className="app">
+          {isAuthenticated() && <Sidebar />}
+          <main className={`main-content ${!isAuthenticated() ? 'full-width' : ''}`}>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route 
+                path="/" 
+                element={
+                  <PrivateRoute>
+                    <Dashboard />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/transactions" 
+                element={
+                  <PrivateRoute>
+                    <Transactions />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/profile" 
+                element={
+                  <PrivateRoute>
+                    <ProfilePage />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/add-transaction" 
+                element={
+                  <PrivateRoute>
+                    <AddEditTransaction />
+                  </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/edit-transaction/:id" 
+                element={
+                  <PrivateRoute>
+                    <AddEditTransaction />
+                  </PrivateRoute>
+                } 
+              />
+            </Routes>
+          </main>
+        </div>
+      </AppProvider>
+    </Router>
   );
-}
+};
 
 export default App;

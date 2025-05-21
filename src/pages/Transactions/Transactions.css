@@ -1,0 +1,59 @@
+.transactions-page {
+  padding: 2rem;
+}
+
+.transactions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.transactions-header > div {
+  display: flex;
+  gap: 1rem;
+}
+
+.refresh-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.refresh-button:hover {
+  background-color: #e0e0e0;
+}
+
+.transactions-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.transactions-tabs button {
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  color: #555;
+  border: none;
+  border-radius: 4px;
+}
+
+.transactions-tabs button.active {
+  background-color: #4a6bdf;
+  color: white;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.pagination button {
+  padding: 0.5rem 1rem;
+}
+
+.pagination span {
+  color: #555;
+}
