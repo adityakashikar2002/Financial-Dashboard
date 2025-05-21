@@ -57,3 +57,43 @@
 .pagination span {
   color: #555;
 }
+
+.add-button {
+  /* Basic styling for the button */
+  background-color: var(--primary); /* Using a primary color from your root variables */
+  color: white;
+  padding: 0.75rem 1.5rem; /* Slightly more padding for a larger touch target */
+  font-weight: 600; /* Make text a bit bolder */
+  font-size: 1rem; /* Slightly larger font size */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  cursor: pointer;
+
+  /* Make the button round from corners */
+  border-radius: 9999px; /* This makes it fully rounded (pill-shaped) */
+
+  /* Add hover effects */
+  transition: all 0.2s ease-in-out; /* Smooth transition for all changes */
+}
+
+.add-button:hover {
+  background-color:#9ea6fd; /* Darker primary color on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+}
+
+.add-button:active {
+  transform: translateY(0); /* Press down effect */
+  box-shadow: none; /* Remove shadow on active */
+}
+
+.add-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--gray); /* Grey out when disabled */
+  transform: none; /* No transform when disabled */
+  box-shadow: none; /* No shadow when disabled */
+}
