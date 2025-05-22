@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { formatCurrency, formatDate } from '../../utils/formatters';
-import { SkeletonLoader, TransactionListSkeleton } from '../SkeletonLoader/SkeletonLoader';
+import { useNavigate } from 'react-router-dom';
+import { formatCurrency} from '../../utils/formatters';
+import { TransactionListSkeleton } from '../SkeletonLoader/SkeletonLoader';
 import './TransactionList.css';
+import { format, parseISO } from 'date-fns';
 
 const TransactionList = ({ transactions, loading, onDelete }) => {
   const navigate = useNavigate();
@@ -42,7 +43,8 @@ const TransactionList = ({ transactions, loading, onDelete }) => {
             <tr key={transaction.id}>
               <td>{transaction.transaction_name}</td>
               <td>{transaction.category}</td>
-              <td>{formatDate(transaction.date)}</td>
+              {/* <td>{formatDate(transaction.date)}</td> */}
+              <td>{format(parseISO(transaction.date), 'MMM dd, yyyy hh:mm a')}</td>
               <td className={transaction.type}>
                 {transaction.type === 'debit' ? '-' : '+'}
                 {formatCurrency(transaction.amount)}

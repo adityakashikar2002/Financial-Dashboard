@@ -44,3 +44,92 @@
   font-size: 1rem;
   margin-top: 1rem;
 }
+
+/* Add this to style the datetime input */
+input[type="datetime-local"] {
+  /* Custom styling if needed */
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Style for AM/PM indicator (if you add a custom dropdown) */
+.time-ampm {
+  margin-left: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+}
+
+/* Add these styles */
+/* src/components/TransactionForm/TransactionForm.css */
+.time-input-group {
+  margin-bottom: 1.5rem;
+}
+
+.time-input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.time-inputs select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.time-inputs span {
+  font-weight: bold;
+}
+
+.time-input-group {
+  margin-bottom: 1.5rem;
+}
+
+.time-input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.time-inputs input[type="time"] {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  flex: 1;
+}
+
+.ampm-select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 80px;
+}
+
+.error-message {
+  color: #dc3545;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: #f8d7da;
+  border-radius: 4px;
+}

@@ -17,20 +17,39 @@ export const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchData = async () => {
-    if (!isAuthenticated()) return;
+  // const fetchData = async () => {
+  //   if (!isAuthenticated()) return;
     
-    try {
-      setLoading(true);
+  //   try {
+  //     setLoading(true);
       
-      const [transactionsData, totalsData, last7DaysData, profileData] = await Promise.all([
-        getAllTransactions(),
-        getCreditDebitTotals(),
-        getLast7DaysTotals(),
-        getProfile()
-      ]);
+  //     const [transactionsData, totalsData, last7DaysData, profileData] = await Promise.all([
+  //       getAllTransactions(),
+  //       getCreditDebitTotals(),
+  //       getLast7DaysTotals(),
+  //       getProfile()
+  //     ]);
 
-      setTransactions(transactionsData);
+  //     setTransactions(transactionsData);
+  const fetchData = async () => {
+  if (!isAuthenticated()) return;
+  
+  try {
+    setLoading(true);
+    
+    const [transactionsData, totalsData, last7DaysData, profileData] = await Promise.all([
+      getAllTransactions(),
+      getCreditDebitTotals(),
+      getLast7DaysTotals(),
+      getProfile()
+    ]);
+
+    // Transactions are already sorted by API, but double-check
+    const sortedTransactions = transactionsData.sort((a, b) => 
+      new Date(b.date) - new Date(a.date)
+    );
+    
+    setTransactions(sortedTransactions);
       
       const creditTotal = totalsData.find(t => t.type === 'credit')?.sum || 0;
       const debitTotal = totalsData.find(t => t.type === 'debit')?.sum || 0;

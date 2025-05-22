@@ -30,13 +30,29 @@ const authRequest = async (method, url, data = null) => {
 };
 
 // Fetch all transactions for current user
+// export const getAllTransactions = async (limit = 10000, offset = 0) => {
+//   const data = await authRequest('get', '/all-transactions', { 
+//     limit, 
+//     offset
+//     // user_id is now handled by Hasura through the x-hasura-user-id header
+//   });
+//   return data.transactions;
+// };
+
+// Update getAllTransactions function
 export const getAllTransactions = async (limit = 10000, offset = 0) => {
   const data = await authRequest('get', '/all-transactions', { 
     limit, 
-    offset
-    // user_id is now handled by Hasura through the x-hasura-user-id header
+    offset,
+    order_by: { date: 'desc' } // This ensures descending order
   });
-  return data.transactions;
+  
+  // If API doesn't support sorting, we'll sort locally
+  const sortedTransactions = data.transactions?.sort((a, b) => 
+    new Date(b.date) - new Date(a.date)
+  );
+  
+  return sortedTransactions || [];
 };
 
 // Fetch credit and debit totals for current user
