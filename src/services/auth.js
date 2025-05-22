@@ -6,7 +6,7 @@ export const login = async (email, password) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
+        'x-hasura-admin-secret': process.env.REACT_APP_HASURA_ADMIN_KEY,
       },
       body: JSON.stringify({ email, password })
     });
@@ -40,7 +40,7 @@ export const getAuthHeaders = () => {
   const userId = localStorage.getItem('userId') || '';
   return {
     'Content-Type': 'application/json',
-    'x-hasura-admin-secret': 'g08A3qQy00y8yFDq3y6N1ZQnhOPOa4msdie5EtKS1hFStar01JzPKrtKEzYY2BtF',
+    'x-hasura-admin-secret': process.env.REACT_APP_HASURA_ADMIN_KEY,
     'x-hasura-role': 'user',
     'x-hasura-user-id': userId
   };
