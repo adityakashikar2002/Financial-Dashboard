@@ -1,21 +1,145 @@
-// Transactions.jsx
+// // Transactions.jsx
+// import React, { useState, useEffect } from 'react';
+// import { useAppContext } from '../../context/AppContext';
+// import TransactionList from '../../components/TransactionList/TransactionList';
+// import { Link } from 'react-router-dom';
+// import { PAGE_SIZE } from '../../utils/constants';
+// import { deleteTransaction as deleteTransactionApi } from '../../services/api'; // Import deleteTransaction API
+// import './Transactions.css';
+
+// const Transactions = () => {
+//   const { 
+//     transactions, 
+//     loading, 
+//     error,
+//     fetchData // fetchData is crucial for refreshing after delete
+//   } = useAppContext();
+//   const [activeTab, setActiveTab] = useState('all');
+//   const [currentPage, setCurrentPage] = useState(1);
+
+//   const filteredTransactions = transactions.filter(tx => {
+//     if (activeTab === 'all') return true;
+//     return tx.type === activeTab;
+//   });
+
+//   const totalPages = Math.ceil(filteredTransactions.length / PAGE_SIZE);
+//   const paginatedTransactions = filteredTransactions.slice(
+//     (currentPage - 1) * PAGE_SIZE,
+//     currentPage * PAGE_SIZE
+//   );
+
+//   useEffect(() => {
+//     setCurrentPage(1);
+//   }, [activeTab]);
+
+//   const handleRefresh = () => {
+//     fetchData();
+//   };
+
+//   // Define the onDelete function to be passed to TransactionList
+//   const handleDeleteTransaction = async (id) => {
+//     try {
+//       await deleteTransactionApi(id);
+//       fetchData(); // Refresh data after successful deletion
+//       alert('Transaction deleted successfully!');
+//     } catch (err) {
+//       console.error('Error deleting transaction:', err);
+//       alert('Failed to delete transaction. Please try again.');
+//     }
+//   };
+
+//   return (
+//     <div className="transactions-page">
+//       <div className="transactions-header">
+//         <h1>Transactions</h1>
+//         <div>
+//           <button onClick={handleRefresh} disabled={loading} className="refresh-button">
+//             Refresh
+//           </button>
+//           <Link to="/add-transaction" className="add-button">
+//             Add Transaction
+//           </Link>
+//         </div>
+//       </div>
+
+//       <div className="transactions-tabs">
+//         <button 
+//           className={activeTab === 'all' ? 'active' : ''}
+//           onClick={() => setActiveTab('all')}
+//         >
+//           All Transactions
+//         </button>
+//         <button 
+//           className={activeTab === 'debit' ? 'active' : ''}
+//           onClick={() => setActiveTab('debit')}
+//         >
+//           Debit
+//         </button>
+//         <button 
+//           className={activeTab === 'credit' ? 'active' : ''}
+//           onClick={() => setActiveTab('credit')}
+//         >
+//           Credit
+//         </button>
+//       </div>
+
+//       {error ? (
+//         <div className="error-message">{error}</div>
+//       ) : (
+//         <>
+//           <TransactionList 
+//             transactions={paginatedTransactions} 
+//             showCheckbox={false}
+//             loading={loading}
+//             onDelete={handleDeleteTransaction}
+//           />
+          
+//           {totalPages > 1 && (
+//             <div className="pagination">
+//               <button 
+//                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+//                 disabled={currentPage === 1}
+//               >
+//                 Previous
+//               </button>
+//               <span>Page {currentPage} of {totalPages}</span>
+//               <button 
+//                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+//                 disabled={currentPage === totalPages}
+//               >
+//                 Next
+//               </button>
+//             </div>
+//           )}
+//         </>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default Transactions;
+
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import TransactionList from '../../components/TransactionList/TransactionList';
 import { Link } from 'react-router-dom';
 import { PAGE_SIZE } from '../../utils/constants';
-import { deleteTransaction as deleteTransactionApi } from '../../services/api'; // Import deleteTransaction API
+import { deleteTransaction as deleteTransactionApi } from '../../services/api';
+import { FiRefreshCw, FiPlus, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 import './Transactions.css';
 
 const Transactions = () => {
-  const { 
-    transactions, 
-    loading, 
+  const {
+    transactions,
+    loading,
     error,
-    fetchData // fetchData is crucial for refreshing after delete
+    fetchData
   } = useAppContext();
+
   const [activeTab, setActiveTab] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const filteredTransactions = transactions.filter(tx => {
     if (activeTab === 'all') return true;
@@ -32,88 +156,169 @@ const Transactions = () => {
     setCurrentPage(1);
   }, [activeTab]);
 
-  const handleRefresh = () => {
-    fetchData();
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchData();
+    setIsRefreshing(false);
   };
 
-  // Define the onDelete function to be passed to TransactionList
   const handleDeleteTransaction = async (id) => {
     try {
       await deleteTransactionApi(id);
-      fetchData(); // Refresh data after successful deletion
-      alert('Transaction deleted successfully!');
+      await fetchData();
+      // Success notification could be added here
     } catch (err) {
       console.error('Error deleting transaction:', err);
-      alert('Failed to delete transaction. Please try again.');
+      // Error notification could be added here
+    }
+  };
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
     }
   };
 
   return (
-    <div className="transactions-page">
-      <div className="transactions-header">
-        <h1>Transactions</h1>
-        <div>
-          <button onClick={handleRefresh} disabled={loading} className="refresh-button">
-            Refresh
-          </button>
-          <Link to="/add-transaction" className="add-button">
-            Add Transaction
-          </Link>
-        </div>
-      </div>
-
-      <div className="transactions-tabs">
-        <button 
-          className={activeTab === 'all' ? 'active' : ''}
-          onClick={() => setActiveTab('all')}
-        >
-          All Transactions
-        </button>
-        <button 
-          className={activeTab === 'debit' ? 'active' : ''}
-          onClick={() => setActiveTab('debit')}
-        >
-          Debit
-        </button>
-        <button 
-          className={activeTab === 'credit' ? 'active' : ''}
-          onClick={() => setActiveTab('credit')}
-        >
-          Credit
-        </button>
-      </div>
-
-      {error ? (
-        <div className="error-message">{error}</div>
-      ) : (
-        <>
-          <TransactionList 
-            transactions={paginatedTransactions} 
-            showCheckbox={false}
-            loading={loading}
-            onDelete={handleDeleteTransaction}
-          />
+    <motion.div 
+      className="transactions-page"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div className="">
+        <div className="transactions-header">
+          <motion.h1 
+            className="page-title"
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            Transaction History
+          </motion.h1>
           
-          {totalPages > 1 && (
-            <div className="pagination">
-              <button 
-                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
+          <div className="header-actions">
+            <motion.button 
+              onClick={handleRefresh} 
+              disabled={loading} 
+              className="refresh-button"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <FiRefreshCw className={`refresh-icon ${isRefreshing ? 'spinning' : ''}`} />
+              {isRefreshing ? 'Refreshing...' : 'Refresh'}
+            </motion.button>
+            
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link to="/add-transaction" className="add-button">
+                <FiPlus className="plus-icon" />
+                Add Transaction
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+
+        <motion.div 
+          className="transactions-tabs"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.button
+            className={`tab ${activeTab === 'all' ? 'active' : ''}`}
+            onClick={() => setActiveTab('all')}
+            variants={itemVariants}
+          >
+            All Transactions
+          </motion.button>
+          <motion.button
+            className={`tab ${activeTab === 'debit' ? 'active' : ''}`}
+            onClick={() => setActiveTab('debit')}
+            variants={itemVariants}
+          >
+            Debit
+          </motion.button>
+          <motion.button
+            className={`tab ${activeTab === 'credit' ? 'active' : ''}`}
+            onClick={() => setActiveTab('credit')}
+            variants={itemVariants}
+          >
+            Credit
+          </motion.button>
+        </motion.div>
+
+        {error ? (
+          <motion.div 
+            className="error-message"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+          >
+            {error}
+          </motion.div>
+        ) : (
+          <>
+            <AnimatePresence mode="wait">
+              <TransactionList
+                key={`${activeTab}-${currentPage}`}
+                transactions={paginatedTransactions}
+                showCheckbox={false}
+                loading={loading}
+                onDelete={handleDeleteTransaction}
+              />
+            </AnimatePresence>
+
+            {totalPages > 1 && (
+              <motion.div 
+                className="pagination"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
               >
-                Previous
-              </button>
-              <span>Page {currentPage} of {totalPages}</span>
-              <button 
-                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
-            </div>
-          )}
-        </>
-      )}
-    </div>
+                <motion.button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <FiChevronLeft />
+                </motion.button>
+                
+                <span>
+                  Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+                </span>
+                
+                <motion.button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <FiChevronRight />
+                </motion.button>
+              </motion.div>
+            )}
+          </>
+        )}
+      </div>
+    </motion.div>
   );
 };
 

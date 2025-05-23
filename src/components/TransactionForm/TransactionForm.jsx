@@ -1,70 +1,9 @@
-// import React, { useState, useEffect } from 'react';
-// import { addTransaction, updateTransaction } from '../../services/api';
-// import './TransactionForm.css';
-
-// const TransactionForm = ({ transaction, isEdit, onSuccess }) => {
-//   const [formData, setFormData] = useState({
-//     transaction_name: transaction?.transaction_name || '',
-//     type: transaction?.type || 'debit',
-//     category: transaction?.category || '',
-//     amount: transaction?.amount || '',
-//     date: transaction?.date || new Date().toISOString()
-//   });
-
-//   const [dateInput, setDateInput] = useState('');
-//   const [timeInput, setTimeInput] = useState('12:00');
-//   const [ampm, setAmpm] = useState('AM');
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     const initializeDateTime = (dateObj) => {
-//       const year = dateObj.getFullYear();
-//       const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-//       const day = String(dateObj.getDate()).padStart(2, '0');
-//       setDateInput(`${year}-${month}-${day}`);
-
-//       let hours = dateObj.getHours();
-//       const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-//       setAmpm(hours >= 12 ? 'PM' : 'AM');
-//       hours = hours % 12 || 12;
-//       setTimeInput(`${String(hours).padStart(2, '0')}:${minutes}`);
-//     };
-
-//     if (transaction?.date) {
-//       const date = new Date(transaction.date);
-//       initializeDateTime(date);
-//     } else {
-//       const now = new Date();
-//       initializeDateTime(now);
-//     }
-//   }, [transaction]);
-
-//   useEffect(() => {
-//     if (dateInput && timeInput) {
-//       const [year, month, day] = dateInput.split('-').map(Number);
-//       const [hoursStr, minutesStr] = timeInput.split(':');
-//       let hourNumber = parseInt(hoursStr, 10);
-//       const minuteNumber = parseInt(minutesStr, 10);
-
-//       if (ampm === 'PM' && hourNumber < 12) {
-//         hourNumber += 12;
-//       }
-//       if (ampm === 'AM' && hourNumber === 12) {
-//         hourNumber = 0;
-//       }
-
-//       const date = new Date(year, month - 1, day, hourNumber, minuteNumber);
-//       const isoString = date.toISOString();
-      
-//       setFormData(prev => ({ ...prev, date: isoString }));
-//     }
-//   }, [dateInput, timeInput, ampm]);
-
 // TransactionForm.jsx
 import React, { useState, useEffect } from 'react';
 import { addTransaction, updateTransaction } from '../../services/api';
 import { format, parseISO } from 'date-fns';
+import { motion } from 'framer-motion';
+import { FiSave } from 'react-icons/fi';
 import './TransactionForm.css';
 
 const TransactionForm = ({ transaction, isEdit, onSuccess }) => {
@@ -257,9 +196,22 @@ const TransactionForm = ({ transaction, isEdit, onSuccess }) => {
           </div>
         </div>
 
-        <button type="submit" disabled={loading}>
+        {/* <button type="submit" disabled={loading} >
           {loading ? 'Saving...' : isEdit ? 'Update Transaction' : 'Add Transaction'}
-        </button>
+        </button> */}
+        <motion.button 
+          type="submit" 
+          className="submit-button"
+          disabled={loading}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <FiSave className="save-icon" />
+          {loading ? 'Saving...' : isEdit ? 'Update Transaction' : 'Add Transaction'}
+        </motion.button>
       </form>
     </div>
   );

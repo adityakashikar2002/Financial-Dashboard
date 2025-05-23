@@ -10,6 +10,7 @@ import { formatCurrency } from '../../utils/formatters';
 import { deleteTransaction as deleteTransactionApi } from '../../services/api';
 import { motion } from 'framer-motion';
 import { subDays, format, parseISO, isSameDay } from 'date-fns';
+import { FiRefreshCw } from 'react-icons/fi';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -179,7 +180,7 @@ const Dashboard = () => {
           <p className="subtitle">Track and manage your finances effectively</p>
         </div>
         
-        <motion.button 
+        {/* <motion.button 
           onClick={handleRefresh} 
           disabled={loading || isRefreshing}
           className="refresh-btn"
@@ -201,7 +202,19 @@ const Dashboard = () => {
               Refresh Data
             </>
           )}
-        </motion.button>
+        </motion.button> */}
+        <div className="header-actions">
+          <motion.button 
+            onClick={handleRefresh} 
+            disabled={loading || isRefreshing}
+            className="refresh-button"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <FiRefreshCw className={`refresh-icon ${isRefreshing ? 'spinning' : ''}`} />
+            {isRefreshing ? 'Refreshing...' : 'Refresh'}
+          </motion.button>
+        </div>
       </div>
 
       {error ? (
@@ -328,7 +341,7 @@ const Dashboard = () => {
               </div>
             </motion.div>
           )}
-
+          <br />
           <motion.div 
             className="recent-transactions"
             initial={{ y: 20, opacity: 0 }}

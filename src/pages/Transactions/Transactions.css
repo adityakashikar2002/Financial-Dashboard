@@ -1,4 +1,4 @@
-.transactions-page {
+/* .transactions-page {
   padding: 2rem;
 }
 
@@ -59,12 +59,12 @@
 }
 
 .add-button {
-  /* Basic styling for the button */
-  background-color: var(--primary); /* Using a primary color from your root variables */
+  
+  background-color: var(--primary); 
   color: white;
-  padding: 0.75rem 1.5rem; /* Slightly more padding for a larger touch target */
-  font-weight: 600; /* Make text a bit bolder */
-  font-size: 1rem; /* Slightly larger font size */
+  padding: 0.75rem 1.5rem; 
+  font-weight: 600; 
+  font-size: 1rem; 
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -72,28 +72,260 @@
   border: none;
   cursor: pointer;
 
-  /* Make the button round from corners */
-  border-radius: 9999px; /* This makes it fully rounded (pill-shaped) */
 
-  /* Add hover effects */
-  transition: all 0.2s ease-in-out; /* Smooth transition for all changes */
+  border-radius: 9999px; 
+
+  transition: all 0.2s ease-in-out; 
 }
 
 .add-button:hover {
-  background-color:#9ea6fd; /* Darker primary color on hover */
-  transform: translateY(-2px); /* Slight lift effect */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+  background-color:#9ea6fd; 
+  transform: translateY(-2px); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
 .add-button:active {
-  transform: translateY(0); /* Press down effect */
-  box-shadow: none; /* Remove shadow on active */
+  transform: translateY(0); 
+  box-shadow: none; 
 }
 
 .add-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  background-color: var(--gray); /* Grey out when disabled */
-  transform: none; /* No transform when disabled */
-  box-shadow: none; /* No shadow when disabled */
+  background-color: var(--gray); 
+  transform: none; 
+  box-shadow: none; 
+}
+  */
+
+
+  :root {
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --primary-dark: #4f46e5;
+  --secondary: #10b981;
+  --danger: #ef4444;
+  --light: #f8fafc;
+  --dark: #1e293b;
+  --gray: #94a3b8;
+  --glass: rgba(255, 255, 255, 0.2);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+}
+
+.transactions-page {
+  padding: 2rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: 'Inter', sans-serif;
+}
+
+.glass-container {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.transactions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.page-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin: 0;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.refresh-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: white;
+  color: var(--dark);
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.refresh-button:hover {
+  background-color: #f1f5f9;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+}
+
+.refresh-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.refresh-icon {
+  transition: transform 0.3s ease;
+  color: #4f46e5;
+}
+
+.refresh-icon.spinning {
+  animation: spin 1s linear infinite;
+  color: #4f46e5;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.add-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(to right, var(--primary), var(--primary-light));
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.add-button:hover {
+  background: linear-gradient(to right, var(--primary-dark), var(--primary));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.plus-icon {
+  font-size: 1.2rem;
+}
+
+.transactions-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 0.75rem 1.5rem;
+  background-color: white;
+  color: var(--gray);
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tab:hover {
+  background-color: #f1f5f9;
+  color: var(--dark);
+}
+
+.tab.active {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.error-message {
+  padding: 1rem;
+  background-color: #fee2e2;
+  color: var(--danger);
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  margin: 2rem 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.pagination button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  color: var(--dark);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  color: var(--dark);
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .transactions-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .transactions-tabs {
+    justify-content: center;
+  }
+}
+
+/* Animation for transaction items */
+.transaction-item {
+  transition: all 0.3s ease;
+}
+
+.transaction-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }

@@ -1,4 +1,4 @@
-.transaction-form {
+/* .transaction-form {
   max-width: 600px;
   margin: 0 auto;
   background-color: white;
@@ -45,16 +45,15 @@
   margin-top: 1rem;
 }
 
-/* Add this to style the datetime input */
+
 input[type="datetime-local"] {
-  /* Custom styling if needed */
+
   padding: 0.75rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
 }
 
-/* Style for AM/PM indicator (if you add a custom dropdown) */
 .time-ampm {
   margin-left: 0.5rem;
   padding: 0.5rem;
@@ -63,8 +62,7 @@ input[type="datetime-local"] {
   background-color: #f5f5f5;
 }
 
-/* Add these styles */
-/* src/components/TransactionForm/TransactionForm.css */
+
 .time-input-group {
   margin-bottom: 1.5rem;
 }
@@ -132,4 +130,160 @@ input[type="datetime-local"] {
   padding: 0.75rem;
   background-color: #f8d7da;
   border-radius: 4px;
+} */
+
+/* Main Card Container */
+.transaction-form {
+  max-width: 600px;
+  width: 90%;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.transaction-form:hover {
+  transform: translateY(-4px);
+}
+
+/* Title */
+.transaction-form h1 {
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  text-align: center;
+  font-size: 2rem;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #5b73e8;
+  box-shadow: 0 0 0 3px rgba(91, 115, 232, 0.2);
+}
+
+/* DateTime Input */
+input[type="datetime-local"] {
+  background-color: #fafafa;
+}
+
+/* Time Inputs */
+.time-input-group {
+  margin-bottom: 1.5rem;
+}
+
+.time-input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.time-inputs input[type="time"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  flex: 1;
+}
+
+.ampm-select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f5f5f5;
+}
+
+/* Button */
+.transaction-form button {
+  width: 100%;
+  padding: 0.9rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background: linear-gradient(to right, #5b73e8, #4e54c8);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.transaction-form button:hover {
+  background: linear-gradient(to right, #4e54c8, #5b73e8);
+  transform: scale(1.02);
+}
+
+/* Error Message */
+.error-message {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.submit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 1rem;
+}
+
+.submit-button:hover {
+  background: linear-gradient(to right, var(--primary-dark), var(--primary));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.submit-button:disabled {
+  background: var(--gray);
+  transform: none;
+  cursor: not-allowed;
+}
+
+.save-icon {
+  font-size: 1.2rem;
 }
