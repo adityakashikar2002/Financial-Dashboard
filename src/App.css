@@ -250,7 +250,7 @@ button:disabled {
   color: var(--dark);
 }
 
-.form-group input,
+/* .form-group input, */
 .form-group select,
 .form-group textarea {
   width: 100%;
