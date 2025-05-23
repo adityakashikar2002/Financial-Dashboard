@@ -69,15 +69,35 @@ export const AppProvider = ({ children }) => {
     fetchData();
   }, []);
 
+  // const refreshTransactions = async () => {
+  //   try {
+  //     const data = await getAllTransactions();
+  //     setTransactions(data);
+  //   } catch (err) {
+  //     console.error('Error refreshing transactions:', err);
+  //     setError('Failed to refresh transactions. Please try again.');
+  //   }
+  // };
+
   const refreshTransactions = async () => {
     try {
-      const data = await getAllTransactions();
-      setTransactions(data);
+      const [transactionsData, totalsData, last7DaysData] = await Promise.all([
+        getAllTransactions(),
+        getCreditDebitTotals(),
+        getLast7DaysTotals()
+      ]);
+      
+      setTransactions(transactionsData);
+      const creditTotal = totalsData.find(t => t.type === 'credit')?.sum || 0;
+      const debitTotal = totalsData.find(t => t.type === 'debit')?.sum || 0;
+      setTotals({ credit: creditTotal, debit: debitTotal });
+      setLast7Days(last7DaysData);
     } catch (err) {
-      console.error('Error refreshing transactions:', err);
-      setError('Failed to refresh transactions. Please try again.');
+      console.error('Error refreshing data:', err);
+      setError('Failed to refresh data. Please try again.');
     }
   };
+
 
   return (
     <AppContext.Provider value={{
