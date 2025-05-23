@@ -29,15 +29,6 @@ const authRequest = async (method, url, data = null) => {
   }
 };
 
-// Fetch all transactions for current user
-// export const getAllTransactions = async (limit = 10000, offset = 0) => {
-//   const data = await authRequest('get', '/all-transactions', { 
-//     limit, 
-//     offset
-//     // user_id is now handled by Hasura through the x-hasura-user-id header
-//   });
-//   return data.transactions;
-// };
 
 // Update getAllTransactions function
 export const getAllTransactions = async (limit = 10000, offset = 0) => {

@@ -17,20 +17,6 @@ export const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // const fetchData = async () => {
-  //   if (!isAuthenticated()) return;
-    
-  //   try {
-  //     setLoading(true);
-      
-  //     const [transactionsData, totalsData, last7DaysData, profileData] = await Promise.all([
-  //       getAllTransactions(),
-  //       getCreditDebitTotals(),
-  //       getLast7DaysTotals(),
-  //       getProfile()
-  //     ]);
-
-  //     setTransactions(transactionsData);
   const fetchData = async () => {
   if (!isAuthenticated()) return;
   
@@ -68,16 +54,6 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  // const refreshTransactions = async () => {
-  //   try {
-  //     const data = await getAllTransactions();
-  //     setTransactions(data);
-  //   } catch (err) {
-  //     console.error('Error refreshing transactions:', err);
-  //     setError('Failed to refresh transactions. Please try again.');
-  //   }
-  // };
 
   const refreshTransactions = async () => {
     try {
