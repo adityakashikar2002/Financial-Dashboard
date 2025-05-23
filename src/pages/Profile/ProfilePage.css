@@ -1,39 +1,3 @@
-/* .profile-page {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.profile-details {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.profile-row {
-  display: flex;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #eee;
-}
-
-.profile-row:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-.profile-row label {
-  width: 200px;
-  font-weight: 500;
-  color: #555;
-}
-
-.profile-row div {
-  flex: 1;
-} */
-
-
 /* Base Styles */
 .profile-container {
   /* max-width: 1600px; */
