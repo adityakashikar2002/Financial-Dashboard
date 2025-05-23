@@ -14,13 +14,17 @@
 .sidebar-header {
   padding: 1.5rem;
   border-bottom: 1px solid var(--gray-light);
+  display: flex; /* Added for alignment */
+  justify-content: center; /* Center the logo */
+  align-items: center; /* Center the logo vertically */
 }
 
-.sidebar-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--primary);
-  margin: 0;
+/* Remove .sidebar-title styles */
+
+.sidebar-logo {
+  max-width: 180px; /* Adjust as needed */
+  height: auto; /* Maintain aspect ratio */
+  display: block; /* Ensures it behaves as a block element */
 }
 
 .sidebar-nav {

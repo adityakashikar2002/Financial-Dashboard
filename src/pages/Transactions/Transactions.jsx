@@ -4,7 +4,7 @@ import TransactionList from '../../components/TransactionList/TransactionList';
 import { Link } from 'react-router-dom';
 import { PAGE_SIZE } from '../../utils/constants';
 import { deleteTransaction as deleteTransactionApi } from '../../services/api';
-import { FiRefreshCw, FiPlus, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiRefreshCw, FiPlus, FiChevronLeft, FiChevronRight, FiSearch, FiFilter } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Transactions.css';
 
@@ -19,10 +19,28 @@ const Transactions = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Get all unique categories from transactions
+  const allCategories = ['all', ...new Set(transactions.map(tx => tx.category))];
 
   const filteredTransactions = transactions.filter(tx => {
-    if (activeTab === 'all') return true;
-    return tx.type === activeTab;
+    // Apply tab filter
+    if (activeTab !== 'all' && tx.type !== activeTab) return false;
+    
+    // Apply search filter
+    if (searchQuery && 
+        !tx.transaction_name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        !tx.category.toLowerCase().includes(searchQuery.toLowerCase())) {
+      return false;
+    }
+    
+    // Apply category filter
+    if (selectedCategory !== 'all' && tx.category !== selectedCategory) return false;
+    
+    return true;
   });
 
   const totalPages = Math.ceil(filteredTransactions.length / PAGE_SIZE);
@@ -33,7 +51,7 @@ const Transactions = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeTab]);
+  }, [activeTab, searchQuery, selectedCategory]);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -45,14 +63,11 @@ const Transactions = () => {
     try {
       await deleteTransactionApi(id);
       await fetchData();
-      // Success notification could be added here
     } catch (err) {
       console.error('Error deleting transaction:', err);
-      // Error notification could be added here
     }
   };
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -116,6 +131,52 @@ const Transactions = () => {
           </div>
         </div>
 
+        <div className="search-filter-container">
+          <div className="search-bar">
+            <FiSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search transactions..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <motion.button 
+            className="filter-toggle"
+            onClick={() => setShowFilters(!showFilters)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <FiFilter className="filter-icon" />
+            Filters
+          </motion.button>
+
+          {showFilters && (
+            <motion.div 
+              className="filters-dropdown"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="filter-group">
+                <label>Category</label>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                  {allCategories.map(category => (
+                    <option key={category} value={category}>
+                      {category === 'all' ? 'All Categories' : category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </motion.div>
+          )}
+        </div>
+
         <motion.div 
           className="transactions-tabs"
           variants={containerVariants}
@@ -157,9 +218,8 @@ const Transactions = () => {
           <>
             <AnimatePresence mode="wait">
               <TransactionList
-                key={`${activeTab}-${currentPage}`}
+                key={`${activeTab}-${currentPage}-${searchQuery}-${selectedCategory}`}
                 transactions={paginatedTransactions}
-                showCheckbox={false}
                 loading={loading}
                 onDelete={handleDeleteTransaction}
               />

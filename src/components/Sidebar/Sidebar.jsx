@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { logout } from '../../services/auth';
 import './Sidebar.css';
+import Logo from '../../assets/icons/logo.png'; // Adjust the path to your logo
 
 const Sidebar = () => {
   const location = useLocation();
@@ -15,7 +16,8 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <h1 className="sidebar-title">Money Matters</h1>
+        {/* Replace h1 with an img tag */}
+        <img src={Logo} alt="Money Matters Logo" className="sidebar-logo" />
       </div>
       <nav className="sidebar-nav">
         <ul>
