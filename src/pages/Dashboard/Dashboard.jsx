@@ -1,3 +1,104 @@
+// import React, { useEffect, useState } from 'react';
+// import { useAppContext } from '../../context/AppContext';
+// import StatsCards from '../../components/StatsCards/StatsCards';
+// import TransactionList from '../../components/TransactionList/TransactionList';
+// import BarChart from '../../components/Charts/BarChart';
+// import PieChart from '../../components/Charts/PieChart';
+// import LineChart from '../../components/Charts/LineChart';
+// import { formatCurrency } from '../../utils/formatters';
+// import { deleteTransaction as deleteTransactionApi } from '../../services/api';
+// import { motion } from 'framer-motion';
+// import './Dashboard.css';
+
+
+// const Dashboard = () => {
+//   const {
+//     totals,
+//     last7Days,
+//     transactions,
+//     loading,
+//     error,
+//     fetchData
+//   } = useAppContext();
+
+//   const [isRefreshing, setIsRefreshing] = useState(false);
+//   const [activeTab, setActiveTab] = useState('overview');
+
+//   // Calculate weekly credit and debit totals
+//   const weeklyCredit = last7Days
+//     .filter(day => day.type === 'credit')
+//     .reduce((sum, day) => sum + day.sum, 0);
+
+//   const weeklyDebit = last7Days
+//     .filter(day => day.type === 'debit')
+//     .reduce((sum, day) => sum + day.sum, 0);
+
+//   // Prepare data for charts
+//   const barChartData = {
+//     labels: last7Days.map(day => new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })),
+//     datasets: [
+//       {
+//         label: 'Credit',
+//         data: last7Days.filter(day => day.type === 'credit').map(day => day.sum),
+//         backgroundColor: 'rgba(74, 222, 128, 0.8)',
+//         borderColor: 'rgba(74, 222, 128, 1)',
+//         borderWidth: 2,
+//         borderRadius: 6,
+//         borderSkipped: false,
+//       },
+//       {
+//         label: 'Debit',
+//         data: last7Days.filter(day => day.type === 'debit').map(day => day.sum),
+//         backgroundColor: 'rgba(248, 113, 113, 0.8)',
+//         borderColor: 'rgba(248, 113, 113, 1)',
+//         borderWidth: 2,
+//         borderRadius: 6,
+//         borderSkipped: false,
+//       }
+//     ]
+//   };
+
+//   const pieChartData = {
+//     labels: ['Credit', 'Debit'],
+//     datasets: [{
+//       data: [totals.credit, totals.debit],
+//       backgroundColor: ['rgba(74, 222, 128, 0.8)', 'rgba(248, 113, 113, 0.8)'],
+//       borderColor: ['rgba(74, 222, 128, 1)', 'rgba(248, 113, 113, 1)'],
+//       borderWidth: 2,
+//     }]
+//   };
+
+//   const lineChartData = {
+//     labels: last7Days.map(day => new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+//     datasets: [
+//       {
+//         label: 'Daily Credit',
+//         data: last7Days.filter(day => day.type === 'credit').map(day => day.sum),
+//         borderColor: '#22c55e',
+//         backgroundColor: 'rgba(34, 197, 94, 0.2)',
+//         tension: 0.4,
+//         fill: true,
+//         pointBackgroundColor: '#22c55e',
+//         pointBorderColor: '#fff',
+//         pointHoverRadius: 6,
+//         pointHoverBorderWidth: 2,
+//       },
+//       {
+//         label: 'Daily Debit',
+//         data: last7Days.filter(day => day.type === 'debit').map(day => day.sum),
+//         borderColor: '#ef4444',
+//         backgroundColor: 'rgba(239, 68, 68, 0.2)',
+//         tension: 0.4,
+//         fill: true,
+//         pointBackgroundColor: '#ef4444',
+//         pointBorderColor: '#fff',
+//         pointHoverRadius: 6,
+//         pointHoverBorderWidth: 2,
+//       }
+//     ]
+//   };
+
+// Dashboard.jsx
 import React, { useEffect, useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import StatsCards from '../../components/StatsCards/StatsCards';
@@ -8,8 +109,8 @@ import LineChart from '../../components/Charts/LineChart';
 import { formatCurrency } from '../../utils/formatters';
 import { deleteTransaction as deleteTransactionApi } from '../../services/api';
 import { motion } from 'framer-motion';
+import { subDays, format, parseISO, isSameDay } from 'date-fns';
 import './Dashboard.css';
-
 
 const Dashboard = () => {
   const {
@@ -24,22 +125,66 @@ const Dashboard = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Calculate weekly credit and debit totals
-  const weeklyCredit = last7Days
-    .filter(day => day.type === 'credit')
-    .reduce((sum, day) => sum + day.sum, 0);
+  // Function to group transactions by day and type
+  const groupTransactionsByDay = (transactions) => {
+    const now = new Date();
+    const days = Array.from({ length: 7 }, (_, i) => subDays(now, i)).reverse();
+    
+    // Initialize dayMap with all 7 days
+    const dayMap = days.reduce((acc, day) => {
+      const dateKey = format(day, 'yyyy-MM-dd');
+      acc[dateKey] = {
+        date: dateKey,
+        credit: 0,
+        debit: 0
+      };
+      return acc;
+    }, {});
 
-  const weeklyDebit = last7Days
-    .filter(day => day.type === 'debit')
-    .reduce((sum, day) => sum + day.sum, 0);
+    // Process transactions
+    transactions.forEach(transaction => {
+      const transactionDate = parseISO(transaction.date);
+      const dateKey = format(transactionDate, 'yyyy-MM-dd');
+      
+      // Only consider transactions from the last 7 days
+      if (dayMap[dateKey]) {
+        if (transaction.type === 'credit') {
+          dayMap[dateKey].credit += transaction.amount;
+        } else {
+          dayMap[dateKey].debit += transaction.amount;
+        }
+      }
+    });
+
+    // Convert to array and format for charts
+    return Object.values(dayMap).map(day => ({
+      date: day.date,
+      credit: day.credit,
+      debit: day.debit
+    }));
+  };
+
+  // Prepare chart data using the grouped transactions
+  const chartData = groupTransactionsByDay(transactions);
+
+  // Calculate weekly totals
+  const weeklyCredit = chartData.reduce((sum, day) => sum + day.credit, 0);
+  const weeklyDebit = chartData.reduce((sum, day) => sum + day.debit, 0);
 
   // Prepare data for charts
   const barChartData = {
-    labels: last7Days.map(day => new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })),
+    labels: chartData.map(day => {
+      try {
+        return format(parseISO(day.date), 'EEE'); // Short day name
+      } catch (e) {
+        console.error('Error formatting date:', day.date, e);
+        return '';
+      }
+    }),
     datasets: [
       {
         label: 'Credit',
-        data: last7Days.filter(day => day.type === 'credit').map(day => day.sum),
+        data: chartData.map(day => day.credit),
         backgroundColor: 'rgba(74, 222, 128, 0.8)',
         borderColor: 'rgba(74, 222, 128, 1)',
         borderWidth: 2,
@@ -48,7 +193,7 @@ const Dashboard = () => {
       },
       {
         label: 'Debit',
-        data: last7Days.filter(day => day.type === 'debit').map(day => day.sum),
+        data: chartData.map(day => day.debit),
         backgroundColor: 'rgba(248, 113, 113, 0.8)',
         borderColor: 'rgba(248, 113, 113, 1)',
         borderWidth: 2,
@@ -69,11 +214,11 @@ const Dashboard = () => {
   };
 
   const lineChartData = {
-    labels: last7Days.map(day => new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+    labels: chartData.map(day => format(parseISO(day.date), 'MMM dd')), // Month and day
     datasets: [
       {
         label: 'Daily Credit',
-        data: last7Days.filter(day => day.type === 'credit').map(day => day.sum),
+        data: chartData.map(day => day.credit),
         borderColor: '#22c55e',
         backgroundColor: 'rgba(34, 197, 94, 0.2)',
         tension: 0.4,
@@ -85,7 +230,7 @@ const Dashboard = () => {
       },
       {
         label: 'Daily Debit',
-        data: last7Days.filter(day => day.type === 'debit').map(day => day.sum),
+        data: chartData.map(day => day.debit),
         borderColor: '#ef4444',
         backgroundColor: 'rgba(239, 68, 68, 0.2)',
         tension: 0.4,
