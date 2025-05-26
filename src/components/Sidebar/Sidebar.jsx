@@ -15,8 +15,7 @@ const Sidebar = () => {
 
   return (
     <div className="sidebar">
-      <div className="sidebar-header">
-        {/* Replace h1 with an img tag */}
+      <div className="sidebar-header" onClick={() => navigate('/')} style={{cursor: 'pointer'}}>
         <img src={Logo} alt="Money Matters Logo" className="sidebar-logo" />
       </div>
       <nav className="sidebar-nav">

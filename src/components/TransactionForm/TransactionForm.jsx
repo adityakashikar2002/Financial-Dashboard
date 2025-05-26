@@ -4,6 +4,7 @@ import { addTransaction, updateTransaction } from '../../services/api';
 import { format, parseISO } from 'date-fns';
 import { motion } from 'framer-motion';
 import { FiSave } from 'react-icons/fi';
+import { CATEGORIES } from '../../utils/constants';
 import './TransactionForm.css';
 
 const TransactionForm = ({ transaction, isEdit, onSuccess }) => {
@@ -143,7 +144,7 @@ const TransactionForm = ({ transaction, isEdit, onSuccess }) => {
           </select>
         </div>
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label>Category</label>
           <input
             type="text"
@@ -152,6 +153,20 @@ const TransactionForm = ({ transaction, isEdit, onSuccess }) => {
             onChange={handleInputChange}
             required
           />
+        </div> */}
+        <div className="form-group">
+          <label>Category</label>
+          <select
+            name="category"
+            value={formData.category}
+            onChange={handleInputChange}
+            required
+          >
+            <option value="">Select a category</option>
+            {CATEGORIES.map(category => (
+              <option key={category} value={category}>{category}</option>
+            ))}
+          </select>
         </div>
 
         <div className="form-group">

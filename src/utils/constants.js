@@ -1,11 +1,23 @@
+// export const CATEGORIES = [
+//   'Shopping',
+//   'Service',
+//   'Transfer',
+//   'Food',
+//   'Entertainment',
+//   'Utilities',
+//   'Transportation',
+//   'Other'
+// ];
+
+// utils/constants.js
 export const CATEGORIES = [
-  'Shopping',
-  'Service',
-  'Transfer',
   'Food',
+  'Transportation',
+  'Shopping',
   'Entertainment',
   'Utilities',
-  'Transportation',
+  'Healthcare',
+  'Education',
   'Other'
 ];
 
