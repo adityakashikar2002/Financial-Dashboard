@@ -101,27 +101,6 @@ export const deleteTransaction = async (id) => {
   return data.delete_transactions_by_pk;
 };
 
-// export const deleteTransaction = async (id) => {
-//   try {
-//     // Optimistic update - remove from UI first
-//     setTransactions(prev => prev.filter(tx => tx.id !== id));
-//     await deleteTransactionApi(id);
-//     // Only refresh totals, not all transactions
-//     const [totalsData, last7DaysData] = await Promise.all([
-//       getCreditDebitTotals(),
-//       getLast7DaysTotals()
-//     ]);
-//     const creditTotal = totalsData.find(t => t.type === 'credit')?.sum || 0;
-//     const debitTotal = totalsData.find(t => t.type === 'debit')?.sum || 0;
-//     setTotals({ credit: creditTotal, debit: debitTotal });
-//     setLast7Days(last7DaysData);
-//   } catch (err) {
-//     console.error('Error deleting transaction:', err);
-//     setError('Failed to delete transaction. Please try again.');
-//     fetchData(); // Fallback to full refresh if error occurs
-//   }
-// };
-
 // Fetch profile for current user
 export const getProfile = async () => {
   const data = await authRequest('get', '/profile');
