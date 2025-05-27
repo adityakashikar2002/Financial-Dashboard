@@ -1,3 +1,66 @@
+// const API_BASE_URL = 'https://bursting-gelding-24.hasura.app/api/rest';
+
+// export const login = async (email, password) => {
+//   try {
+//     const response = await fetch(`${API_BASE_URL}/get-user-id`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'x-hasura-admin-secret': process.env.REACT_APP_HASURA_ADMIN_KEY,
+//       },
+//       body: JSON.stringify({ email, password })
+//     });
+
+//     const data = await response.json();
+
+//     if (!response.ok) {
+//       throw new Error(data.message || 'Login failed');
+//     }
+
+//     if (data.get_user_id?.length > 0) {
+//       const userId = data.get_user_id[0].id;
+//       localStorage.setItem('userId', userId.toString());
+//       localStorage.setItem('userEmail', email);
+//       window.location.reload(); // Force refresh to trigger data fetch
+//       return { userId, email };
+//     }
+
+//     throw new Error('User not found');
+//   } catch (error) {
+//     console.error('Login failed:', error);
+//     throw error;
+//   }
+// };
+
+// export const logout = () => {
+//   localStorage.removeItem('userId');
+//   localStorage.removeItem('userEmail');
+//   window.location.href = '/login'; // Redirect to login and refresh
+// };
+
+// export const getAuthHeaders = () => {
+//   const userId = localStorage.getItem('userId') || '';
+//   return {
+//     'Content-Type': 'application/json',
+//     'x-hasura-admin-secret': process.env.REACT_APP_HASURA_ADMIN_KEY,
+//     'x-hasura-role': 'user',
+//     'x-hasura-user-id': userId
+//   };
+// };
+
+// export const isAuthenticated = () => {
+//   return !!localStorage.getItem('userId');
+// };
+
+// export const getCurrentUser = () => {
+//   return {
+//     id: localStorage.getItem('userId'),
+//     email: localStorage.getItem('userEmail')
+//   };
+// };
+
+
+// src/services/auth.js
 const API_BASE_URL = 'https://bursting-gelding-24.hasura.app/api/rest';
 
 export const login = async (email, password) => {
@@ -19,10 +82,14 @@ export const login = async (email, password) => {
 
     if (data.get_user_id?.length > 0) {
       const userId = data.get_user_id[0].id;
+      const isAdmin = userId === 3; // Check if user is admin
+      
       localStorage.setItem('userId', userId.toString());
       localStorage.setItem('userEmail', email);
+      localStorage.setItem('isAdmin', isAdmin.toString());
+      
       window.location.reload(); // Force refresh to trigger data fetch
-      return { userId, email };
+      return { userId, email, isAdmin };
     }
 
     throw new Error('User not found');
@@ -35,15 +102,18 @@ export const login = async (email, password) => {
 export const logout = () => {
   localStorage.removeItem('userId');
   localStorage.removeItem('userEmail');
-  window.location.href = '/login'; // Redirect to login and refresh
+  localStorage.removeItem('isAdmin');
+  window.location.href = '/login';
 };
 
 export const getAuthHeaders = () => {
   const userId = localStorage.getItem('userId') || '';
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  
   return {
     'Content-Type': 'application/json',
     'x-hasura-admin-secret': process.env.REACT_APP_HASURA_ADMIN_KEY,
-    'x-hasura-role': 'user',
+    'x-hasura-role': isAdmin ? 'admin' : 'user',
     'x-hasura-user-id': userId
   };
 };
@@ -52,9 +122,87 @@ export const isAuthenticated = () => {
   return !!localStorage.getItem('userId');
 };
 
+export const isAdmin = () => {
+  return localStorage.getItem('isAdmin') === 'true';
+};
+
 export const getCurrentUser = () => {
   return {
     id: localStorage.getItem('userId'),
-    email: localStorage.getItem('userEmail')
+    email: localStorage.getItem('userEmail'),
+    isAdmin: localStorage.getItem('isAdmin') === 'true'
   };
 };
+
+
+
+// // src/services/auth.js
+// const API_BASE_URL = 'https://bursting-gelding-24.hasura.app/api/rest';
+
+// export const login = async (email, password) => {
+//   try {
+//     const response = await fetch(`${API_BASE_URL}/get-user-id`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'x-hasura-admin-secret': process.env.REACT_APP_HASURA_ADMIN_KEY,
+//       },
+//       body: JSON.stringify({ email, password })
+//     });
+
+//     const data = await response.json();
+
+//     if (!response.ok) {
+//       throw new Error(data.message || 'Login failed');
+//     }
+
+//     if (data.get_user_id?.length > 0) {
+//       const userId = data.get_user_id[0].id;
+//       localStorage.setItem('userId', userId.toString());
+//       localStorage.setItem('userEmail', email);
+//       localStorage.setItem('isAdmin', userId === '3' ? 'true' : 'false'); // Add this line
+//       window.location.reload();
+//       return { userId, email };
+//     }
+
+//     throw new Error('User not found');
+//   } catch (error) {
+//     console.error('Login failed:', error);
+//     throw error;
+//   }
+// };
+
+// export const logout = () => {
+//   localStorage.removeItem('userId');
+//   localStorage.removeItem('userEmail');
+//   localStorage.removeItem('isAdmin'); // Add this line
+//   window.location.href = '/login';
+// };
+
+// export const getAuthHeaders = () => {
+//   const userId = localStorage.getItem('userId') || '';
+//   const isAdmin = localStorage.getItem('isAdmin') === 'true'; // Check if admin
+  
+//   return {
+//     'Content-Type': 'application/json',
+//     'x-hasura-admin-secret': process.env.REACT_APP_HASURA_ADMIN_KEY,
+//     'x-hasura-role': isAdmin ? 'admin' : 'user', // Set role based on admin status
+//     'x-hasura-user-id': userId
+//   };
+// };
+
+// export const isAuthenticated = () => {
+//   return !!localStorage.getItem('userId');
+// };
+
+// export const isAdmin = () => { // Add this new function
+//   return localStorage.getItem('isAdmin') === 'true';
+// };
+
+// export const getCurrentUser = () => {
+//   return {
+//     id: localStorage.getItem('userId'),
+//     email: localStorage.getItem('userEmail'),
+//     isAdmin: localStorage.getItem('isAdmin') === 'true' // Add this
+//   };
+// };
