@@ -7,6 +7,7 @@
 // import { FiRefreshCw, FiPlus, FiChevronLeft, FiChevronRight, FiSearch } from 'react-icons/fi';
 // import { motion, AnimatePresence } from 'framer-motion';
 // import { CATEGORIES } from '../../utils/constants';
+// import { isAdmin } from '../../services/auth';
 // import './Transactions.css';
 
 // const Transactions = () => {
@@ -31,6 +32,7 @@
 //   const [isRefreshing, setIsRefreshing] = useState(false);
 //   const [searchQuery, setSearchQuery] = useState('');
 //   const [last7Days, setLast7Days] = useState([]);
+//   const adminDisabled = isAdmin();
 
 //   const [filters, setFilters] = useState({
 //     search: '',
@@ -176,16 +178,17 @@
 //               <FiRefreshCw className={`refresh-icon ${isRefreshing ? 'spinning' : ''}`} />
 //               {isRefreshing ? 'Refreshing...' : 'Refresh'}
 //             </motion.button>
-            
-//             <motion.div
+//             {!adminDisabled && (
+//               <motion.div
 //               whileHover={{ scale: 1.05 }}
 //               whileTap={{ scale: 0.95 }}
-//             >
+//             > 
 //               <Link to="/add-transaction" className="add-button">
 //                 <FiPlus className="plus-icon" />
 //                 Add Transaction
 //               </Link>
 //             </motion.div>
+//             )}
 //           </div>
 //         </div>
 
@@ -375,33 +378,26 @@ import { isAdmin } from '../../services/auth';
 import './Transactions.css';
 
 const Transactions = () => {
-  // const {
-  //   transactions,
-  //   loading,
-  //   error,
-  //   fetchData
-  // } = useAppContext();
   const {
     transactions,
-    setTransactions, // Get from context
+    setTransactions,
     totals,
-    setTotals, // Get from context
+    setTotals,
     loading,
     error,
     fetchData
   } = useAppContext();
 
-  const [activeTab, setActiveTab] = useState('all');
+  const [activeTab, setActiveTab] = useState('all'); // State to control which tab is active
   const [currentPage, setCurrentPage] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [last7Days, setLast7Days] = useState([]);
   const adminDisabled = isAdmin();
 
   const [filters, setFilters] = useState({
     search: '',
     category: 'all',
-    type: 'all',
+    // Removed 'type' from filters state as 'activeTab' will handle it
     amountMin: '',
     amountMax: '',
     dateFrom: '',
@@ -409,18 +405,26 @@ const Transactions = () => {
   });
 
   const filteredTransactions = transactions.filter(tx => {
+    // Search filter
     if (filters.search && 
         !tx.transaction_name.toLowerCase().includes(filters.search.toLowerCase()) &&
         !tx.category.toLowerCase().includes(filters.search.toLowerCase())) {
       return false;
     }
     
+    // Category filter
     if (filters.category !== 'all' && tx.category !== filters.category) return false;
-    if (filters.type !== 'all' && tx.type !== filters.type) return false;
     
+    // Type filter based on activeTab (primary control for type)
+    if (activeTab !== 'all' && tx.type !== activeTab) {
+      return false;
+    }
+
+    // Amount range filters
     if (filters.amountMin && tx.amount < Number(filters.amountMin)) return false;
     if (filters.amountMax && tx.amount > Number(filters.amountMax)) return false;
     
+    // Date range filters
     const txDate = new Date(tx.date);
     if (filters.dateFrom && txDate < new Date(filters.dateFrom)) return false;
     if (filters.dateTo && txDate > new Date(filters.dateTo + 'T23:59:59')) return false;
@@ -434,9 +438,10 @@ const Transactions = () => {
     currentPage * PAGE_SIZE
   );
 
+  // Reset to first page whenever filters or activeTab change
   useEffect(() => {
     setCurrentPage(1);
-  }, [filters]);
+  }, [filters, activeTab]);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -444,25 +449,13 @@ const Transactions = () => {
     setIsRefreshing(false);
   };
 
-  // const handleDeleteTransaction = async (id) => {
-  //   try {
-  //     await deleteTransactionApi(id);
-  //     await fetchData();
-  //   } catch (err) {
-  //     console.error('Error deleting transaction:', err);
-  //   }
-  // };
-
   const handleDeleteTransaction = async (id) => {
     try {
-      // Optimistic update
       const newTransactions = transactions.filter(tx => tx.id !== id);
       setTransactions(newTransactions);
       
-      // Make API call
       await deleteTransactionApi(id);
       
-      // Update summary data (if needed)
       const [totalsData, last7DaysData] = await Promise.all([
         getCreditDebitTotals(),
         getLast7DaysTotals()
@@ -476,7 +469,7 @@ const Transactions = () => {
       
     } catch (err) {
       console.error('Error deleting transaction:', err);
-      fetchData(); // Fallback to full refresh
+      fetchData(); // Fallback to full refresh on error
     }
   };
 
@@ -505,12 +498,12 @@ const Transactions = () => {
     setFilters({
       search: '',
       category: 'all',
-      type: 'all',
       amountMin: '',
       amountMax: '',
       dateFrom: '',
       dateTo: ''
     });
+    setActiveTab('all'); // Clear the active tab when clearing filters
   };
 
   return (
@@ -570,17 +563,18 @@ const Transactions = () => {
 
         <div className="filters-container">
           <div className="filter-row">
-            <div className="filter-group">
+            {/* Removed the 'Type' dropdown here as tabs will handle it */}
+            {/* <div className="filter-group">
               <label>Type</label>
               <select
-                value={filters.type}
+                value={filters.type} 
                 onChange={(e) => setFilters({...filters, type: e.target.value})}
               >
                 <option value="all">All Types</option>
                 <option value="credit">Credit</option>
                 <option value="debit">Debit</option>
               </select>
-            </div>
+            </div> */}
             
             <div className="filter-group">
               <label>Category</label>
