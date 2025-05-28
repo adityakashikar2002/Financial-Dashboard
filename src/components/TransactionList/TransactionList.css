@@ -195,3 +195,24 @@
     font-size: 0.75rem;
   }
 }
+
+.admin-notice {
+  background-color: #f8f9fa;
+  border-left: 4px solid #dc3545;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.admin-badge {
+  background-color: #dc3545;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 4rem;
+  text-transform: uppercase;
+}
