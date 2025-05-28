@@ -1,6 +1,5 @@
-.transaction-list-container {
+/* .transaction-list-container {
   width: 100%;
-  /* overflow-x: auto; */
   border-radius: 12px;
   background-color: white;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -165,7 +164,7 @@
   }
 }
 
-/* Add to your main CSS file */
+
 .admin-notice {
   background-color: #f8f9fa;
   border-left: 4px solid #dc3545;
@@ -185,4 +184,234 @@
   text-align: center;
   margin: 4rem;
   text-transform: uppercase;
+}
+
+
+.user-cell {
+  min-width: 150px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #334155;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+} */
+
+
+/* src/components/TransactionList/TransactionList.css */
+.transaction-list-container {
+  width: 100%;
+  border-radius: 12px;
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  table-layout: fixed;
+}
+
+.transaction-table th {
+  position: sticky;
+  top: 0;
+  background-color: #f9fafb;
+  color: #6b7280;
+  font-weight: 600;
+  text-align: left;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  z-index: 10;
+  height: 48px;
+  vertical-align: middle;
+}
+
+.transaction-table td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
+  height: 60px;
+  box-sizing: border-box;
+}
+
+.transaction-row {
+  transition: all 0.2s ease;
+}
+
+.transaction-row:hover {
+  background-color: #f9fafb;
+}
+
+.transaction-name {
+  font-weight: 500;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.category-badge {
+  display: inline-block;
+  background-color: #e0e7ff;
+  color: #4f46e5;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.transaction-date {
+  color: #6b7280;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.transaction-amount {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.transaction-amount.credit {
+  color: #10b981;
+}
+
+.transaction-amount.debit {
+  color: #ef4444;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-btn, .delete-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-btn {
+  background-color: #e0f2fe;
+  color: #0ea5e9;
+}
+
+.edit-btn:hover {
+  background-color: #bae6fd;
+}
+
+.delete-btn {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.delete-btn:hover {
+  background-color: #fecaca;
+}
+
+.edit-icon, .delete-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* User cell styles */
+.user-cell {
+  min-width: 160px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #334155;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.error-message {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  .transaction-table th, 
+  .transaction-table td {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .user-cell {
+    min-width: 120px;
+  }
+  
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .category-badge {
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+  }
 }

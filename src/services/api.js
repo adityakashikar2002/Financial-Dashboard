@@ -47,14 +47,14 @@ export const getAdminLast7DaysTotals = async () => {
 };
 
 // Regular user APIs
-export const getAllTransactions = async (limit = 10000, offset = 0) => {
-  const data = await authRequest('get', '/all-transactions', { 
-    limit, 
-    offset,
-    order_by: { date: 'desc' }
-  });
-  return data.transactions || [];
-};
+// export const getAllTransactions = async (limit = 10000, offset = 0) => {
+//   const data = await authRequest('get', '/all-transactions', { 
+//     limit, 
+//     offset,
+//     order_by: { date: 'desc' }
+//   });
+//   return data.transactions || [];
+// };
 
 export const getCreditDebitTotals = async () => {
   if (isAdmin()) {
@@ -127,4 +127,39 @@ export const getProfile = async () => {
   // Always fetch profile with 'user' role, regardless of logged-in role
   const data = await authRequest('get', '/profile', null, { 'x-hasura-role': 'user' });
   return data.users[0];
+};
+
+
+
+export const getAllTransactions = async (limit = 10000, offset = 0) => {
+  if (isAdmin()) {
+    // For admin, we need to fetch all transactions without user filtering
+    const response = await authRequest('get', '/all-transactions', {
+      limit,
+      offset,
+      order_by: { date: 'desc' }
+    });
+    return response.transactions || [];
+  } else {
+    // Regular user fetch (existing implementation)
+    const data = await authRequest('get', '/all-transactions', { 
+      limit, 
+      offset,
+      order_by: { date: 'desc' }
+    });
+    return data.transactions || [];
+  }
+};
+
+export const getUserProfile = async (userId) => {
+  try {
+    const data = await authRequest('get', '/profile', null, {
+      'x-hasura-role': 'user', // Use user role to fetch profile
+      'x-hasura-user-id': userId
+    });
+    return data.users[0];
+  } catch (error) {
+    console.error(`Error fetching profile for user ${userId}:`, error);
+    return null;
+  }
 };
